@@ -1,5 +1,7 @@
 package example.pdfbox.services;
 
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 
