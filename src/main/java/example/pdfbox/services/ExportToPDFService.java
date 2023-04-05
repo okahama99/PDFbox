@@ -1,15 +1,17 @@
 package example.pdfbox.services;
 
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 public interface ExportToPDFService {
-    void insertText() throws IOException;
+    void insertText(List<String> list) throws IOException;
 
-    void insertImage() throws IOException, URISyntaxException;
+    void insertImage() throws IOException, URISyntaxException, ClassNotFoundException;
 
     void fileEncryption() throws IOException;
+
+    void createTable() throws IOException;
 
 }

@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class Report {
     private Long reportId;
-    private Date reportDate;
+    private Instant reportDate;
 
     private ShippingInformation shippingInfo;
     private DeliveryInformation deliveryInfo;

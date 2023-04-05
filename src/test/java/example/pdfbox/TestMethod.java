@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 public class TestMethod {
@@ -14,9 +16,13 @@ public class TestMethod {
     private ExportToPDFService exportToPDFService;
 
     @Test
-    public void createPDF() throws IOException, URISyntaxException {
-        exportToPDFService.insertText();
+    public void createPDF() throws IOException, URISyntaxException, ClassNotFoundException {
+        exportToPDFService.createTable();
+        List<String> stringList = new ArrayList<>();
+        stringList.add("test1");
+        stringList.add("test2");
+        exportToPDFService.insertText(stringList);
         exportToPDFService.insertImage();
-        exportToPDFService.fileEncryption();
+//        exportToPDFService.fileEncryption();
     }
 }
