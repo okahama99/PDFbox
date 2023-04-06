@@ -387,18 +387,78 @@ public class ExportToPDFServiceImpl implements ExportToPDFService {
     public void createPDFWithInputtedPage(int numberOfPage) throws IOException {
         PDDocument document = new PDDocument();
 
+        User recipient = new User();
+        recipient.setAddress("QUEBECOISE");
+        recipient.setName("MARIE-CHRISTINE");
+        recipient.setRole("Recipient");
+        recipient.setUserId(1L);
+
+        User shipper = new User();
+        shipper.setAddress("CANADA");
+        shipper.setName("RECEPTION");
+        shipper.setRole("Shipper");
+        shipper.setUserId(2L);
+
+        ShippingInformation shippingInfo = new ShippingInformation();
+        shippingInfo.setShippingId(1L);
+        shippingInfo.setShipper(shipper);
+        shippingInfo.setRecipient(recipient);
+
+        DeliveryInformation deliveryInfo = new DeliveryInformation();
+        deliveryInfo.setDeliveryId(1L);
+        deliveryInfo.setActivity("Delivery");
+        deliveryInfo.setDateTime(Instant.now());
+        deliveryInfo.setLocation("YUTA");
+        deliveryInfo.setFedExEmp("Automated");
+        deliveryInfo.setFedExEmployee("Felipe, L");
+
+        RecipientInformation recipientInfo = new RecipientInformation();
+        recipientInfo.setRecipientId(1L);
+        recipientInfo.setSignatureImage("image/FedEx.jpg");
+        recipientInfo.setRecipientName("M.NATALIE");
+
+        Corporation corporation = new Corporation();
+        corporation.setCorporationId(1L);
+        corporation.setName("Federal Express Canada Ltd.");
+        corporation.setAddress("5985 Explorer Drive");
+        corporation.setHeadquarter("Mississauga");
+
+        Report report = new Report();
+        report.setReportDate(Instant.now());
+        report.setReportId(1L);
+        report.setShippingInfo(shippingInfo);
+        report.setRecipientInfo(recipientInfo);
+        report.setCorporation(corporation);
+        report.setDeliveryInfo(deliveryInfo);
+
+
+        String[][] reportContent = {
+                {"ID","Report Date"},
+                {report.getReportId().toString(), report.getReportDate().toString()}
+        };
+
+        String[][] shipperContent = {
+                {"Shipping ID", "Name", "Address"},
+                {shippingInfo.getShippingId().toString(), shipper.getName(), shipper.getAddress()}
+        };
+
+        String[][] recipientContent = {
+                {"Shipping ID", "Name", "Address"},
+                {shippingInfo.getShippingId().toString(), recipient.getName(), recipient.getAddress()}
+        };
+
+        String[][] deliveryContent = {
+                {"ID", "Activity", "Location", "FedEx Emp#", "FedEx Employee"},
+                {deliveryInfo.getDeliveryId().toString(), deliveryInfo.getActivity(),
+                        deliveryInfo.getLocation(), deliveryInfo.getFedExEmp(), deliveryInfo.getFedExEmployee()}
+        };
+
         for (int i = 0; i < numberOfPage; i++) {
             PDPage page = new PDPage();
             document.addPage(page);
 
             PDPageContentStream contentStream =
                     new PDPageContentStream(document, page);
-
-            Corporation corporation = new Corporation();
-            corporation.setCorporationId(1L);
-            corporation.setName("Federal Express Canada Ltd.");
-            corporation.setAddress("5985 Explorer Drive");
-            corporation.setHeadquarter("Mississauga");
 
             // FedEx logo
             Path path = Paths.get("image/FedEx.jpg");
@@ -417,6 +477,44 @@ public class ExportToPDFServiceImpl implements ExportToPDFService {
             contentStream.newLine();
             contentStream.showText(corporation.getHeadquarter());
             contentStream.endText();
+
+            // Report information
+            contentStream.setFont(PDType1Font.TIMES_BOLD, 24);
+            contentStream.beginText();
+            contentStream.setLeading(14.5f);
+            contentStream.newLineAtOffset(200,620);
+            contentStream.showText("Report information:");
+            contentStream.endText();
+
+            drawTableForTwoDimensionArray(page, contentStream,600,50, reportContent);
+
+            // Shipper information
+            contentStream.setFont(PDType1Font.TIMES_BOLD, 24);
+            contentStream.beginText();
+            contentStream.setLeading(14.5f);
+            contentStream.newLineAtOffset(200,520);
+            contentStream.showText("Shipper information:");
+            contentStream.endText();
+
+            drawTableForTwoDimensionArray(page, contentStream,500,50, shipperContent);
+
+            contentStream.setFont(PDType1Font.TIMES_BOLD, 24);
+            contentStream.beginText();
+            contentStream.setLeading(14.5f);
+            contentStream.newLineAtOffset(200,420);
+            contentStream.showText("Recipient information:");
+            contentStream.endText();
+
+            drawTableForTwoDimensionArray(page, contentStream,400,50, recipientContent);
+
+            contentStream.setFont(PDType1Font.TIMES_BOLD, 24);
+            contentStream.beginText();
+            contentStream.setLeading(14.5f);
+            contentStream.newLineAtOffset(200,320);
+            contentStream.showText("Delivery information:");
+            contentStream.endText();
+
+            drawTableForTwoDimensionArray(page, contentStream,300,50, deliveryContent);
 
             // Draw a line
             contentStream.setLineWidth(2.5f);
