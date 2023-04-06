@@ -16,7 +16,7 @@ public class TestMethod {
     private ExportToPDFService exportToPDFService;
 
     @Test
-    public void createPDF() throws IOException, URISyntaxException, ClassNotFoundException {
+    public void testPDF() throws IOException, URISyntaxException, ClassNotFoundException {
         exportToPDFService.createTable();
         List<String> stringList = new ArrayList<>();
         stringList.add("test1");
@@ -24,5 +24,16 @@ public class TestMethod {
         exportToPDFService.insertText(stringList);
         exportToPDFService.insertImage();
 //        exportToPDFService.fileEncryption();
+    }
+
+    @Test
+    public void finalPDF() throws IOException {
+        exportToPDFService.finalPDF();
+    }
+
+    @Test
+    public void createMultiplePDF() throws IOException {
+        int numberOfPage = 3;
+        exportToPDFService.createPDFWithInputtedPage(numberOfPage);
     }
 }
